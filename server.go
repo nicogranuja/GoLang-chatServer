@@ -32,6 +32,7 @@ func LoadStatic(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	cssHandle := http.FileServer(http.Dir("./view/css/"))
+	jsHandle := http.FileServer(http.Dir("./view/js/"))
 
 	mux := mux.NewRouter()
 	mux.HandleFunc("/Hello", HelloWorld).Methods("GET")
@@ -40,6 +41,7 @@ func main() {
 
 	http.Handle("/", mux)
 	http.Handle("/css/", http.StripPrefix("/css/", cssHandle))
+	http.Handle("/js/", http.StripPrefix("/js/", jsHandle))
 	log.Println("Server is on the port 8000")
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
