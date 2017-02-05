@@ -2,11 +2,20 @@
 <html>
 <head>
 	<title>Chat Server test</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
 	<script type="text/javascript" src="js/server.js"></script>
 </head>
 <body>
-	<h1>Hello World From the html file grabbed in Go</h1>
+	<div id="container">
+		<form id="register">	
+			<h3>
+				<label>Username </label>
+			</h3>
+			<input type="text" name="username" id="username" class="form form-control">
+			<input type="submit" value="Sign in" class="btn btn-primary">
+		</form>
+	</div>
 </body>
 </html>

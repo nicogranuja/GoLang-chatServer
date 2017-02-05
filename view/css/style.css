@@ -1,3 +1,34 @@
 body{
-	background: lightblue;
+
+}
+
+#register{
+	background-color: #eee;
+	padding: 10px 15px;
+	width: 40%;
+	margin: 0 auto;
+	text-align: center;
+	padding-bottom: 60px;
+	margin-top: 10em;
+}
+
+#register input, #register label{
+	display: inline-block;
+	margin-right: 10px;
+}
+
+#register input[type="text"]{
+	width: 80%;
+}
+
+#register label{
+	width: 20%;
+	text-align: left;
+}
+
+#register input[type="submit"]{
+	margin-top: 1em;
+	float: right;
+	clear: both;
+	display: block;
 }
