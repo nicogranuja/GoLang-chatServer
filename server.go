@@ -25,10 +25,15 @@ func CreateResponse() Response{
 	return Response { "This is a json format" , true}
 }
 
+func LoadStatic(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w,r, "./view/index.html")
+}
+
 func main() {
 	mux := mux.NewRouter()
 	mux.HandleFunc("/Hello", HelloWorld).Methods("GET")
 	mux.HandleFunc("/HelloJson", HelloJson).Methods("GET")
+	mux.HandleFunc("/Static", LoadStatic).Methods("GET")
 
 	http.Handle("/", mux)
 	log.Println("Server is on the port 8000")
