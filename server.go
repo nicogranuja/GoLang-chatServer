@@ -70,15 +70,21 @@ func CreateUser(username string, ws *websocket.Conn) User {
 }
 
 func AddUser (user User) {
-	User.Lock()
+	Users.Lock()
 	defer Users.Unlock()
 
 	Users.m[user.username] = user
 }
 
+func RemoveUser(username string) {
+	Users.Lock()
+	defer Users.Unlock()
+	delete(Users.m, username)
+}
+
 func WebSocket(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	username := vars("username") 
+	username := vars["username"]
 
 	ws, err := websocket.Upgrade(w,r,nil,1024,1024)
 	if err != nil{
@@ -87,8 +93,16 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	current_user := CreateUser(username, ws)
-	AddUser()
+	AddUser(current_user)
 	log.Println("New user added.")
+
+	for{
+		_, _, err := ws.ReadMessage()
+		if err != nil{
+			RemoveUser(username)
+			return
+		}
+	}
 }
 
 func main() {
