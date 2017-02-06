@@ -1,8 +1,8 @@
 $(document).ready(function(){
-
+	var username;
 	$("#register").on("submit", function(e){
 		e.preventDefault();
-		var username = $("#username").val();
+		username = $("#username").val();
 
 		$.ajax({
 			type:"POST",
@@ -27,6 +27,6 @@ $(document).ready(function(){
 	}
 
 	function createConnection(){
-
+		var connection = new WebSocket("ws:://localhost:8000/Chat/" + username)
 	}
 })

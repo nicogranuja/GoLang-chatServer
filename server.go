@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"encoding/json"
@@ -21,6 +22,7 @@ var Users = struct{
 
 type User struct{
 	username string
+	WebSocket *websocket.Conn
 }
 
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
@@ -63,6 +65,32 @@ func UserExists (username string) bool{
 	return false;
 }
 
+func CreateUser(username string, ws *websocket.Conn) User {
+	return User{ username, ws}
+}
+
+func AddUser (user User) {
+	User.Lock()
+	defer Users.Unlock()
+
+	Users.m[user.username] = user
+}
+
+func WebSocket(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars("username") 
+
+	ws, err := websocket.Upgrade(w,r,nil,1024,1024)
+	if err != nil{
+		log.Println(err)
+		return
+	}
+
+	current_user := CreateUser(username, ws)
+	AddUser()
+	log.Println("New user added.")
+}
+
 func main() {
 
 	cssHandle := http.FileServer(http.Dir("./view/css/"))
@@ -73,6 +101,7 @@ func main() {
 	mux.HandleFunc("/HelloJson", HelloJson).Methods("GET")
 	mux.HandleFunc("/Static", LoadStatic).Methods("GET")
 	mux.HandleFunc("/Validate", Validate).Methods("POST")
+	mux.HandleFunc("/Chat/{username}", WebSocket).Methods("GET")
 
 	http.Handle("/", mux)
 	http.Handle("/css/", http.StripPrefix("/css/", cssHandle))
