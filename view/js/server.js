@@ -37,7 +37,9 @@ $(document).ready(function(){
 
 		connection.onopen = function (response){
 			connection.onmessage = function(response){
-				console.log("Something was sent");
+				console.log(response.data);
+				var val = $("#chat_area").val();
+				$("#chat_area").val(val + "\n" + response.data)
 			}
 		}
 

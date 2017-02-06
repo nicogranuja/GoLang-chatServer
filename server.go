@@ -25,6 +25,14 @@ type User struct{
 	WebSocket *websocket.Conn
 }
 
+func ToArrayByte(value string)[]byte {
+	return []byte(value)
+}
+
+func ConcatMessage(username string, array[] byte)string {
+	return username + " : " + string (array[:])
+}
+
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte ("Hello World!"))
 }
@@ -80,6 +88,7 @@ func RemoveUser(username string) {
 	Users.Lock()
 	defer Users.Unlock()
 	delete(Users.m, username)
+	log.Println("The user "+ username + " has left.")
 }
 
 func SendMessage(type_message int, message []byte) {
@@ -113,7 +122,8 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 			RemoveUser(username)
 			return
 		}
-		SendMessage(type_message, message)
+		finalMessage := ConcatMessage(username, message)
+		SendMessage(type_message, ToArrayByte(finalMessage))
 	}
 }
 
