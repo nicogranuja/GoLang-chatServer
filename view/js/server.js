@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	var username;
+	var final_connection;
+
 	$("#register").on("submit", function(e){
 		e.preventDefault();
 		username = $("#username").val();
@@ -27,6 +29,24 @@ $(document).ready(function(){
 	}
 
 	function createConnection(){
-		var connection = new WebSocket("ws:://localhost:8000/Chat/" + username)
+		$("#register").hide();
+		$("#containerChat").show();
+
+		var connection = new WebSocket("ws://localhost:8000/Chat/" + username)
+		final_connection = connection;
+
+		connection.onopen = function (response){
+			connection.onmessage = function(response){
+				console.log("Something was sent");
+			}
+		}
+
+		$("#form_message").on("submit", function(e){
+			e.preventDefault();
+			var message = $("#msg").val();
+			final_connection.send(message)
+			$("#msg").val("");
+		})
+
 	}
 })
